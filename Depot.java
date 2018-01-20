@@ -14,11 +14,11 @@ public class Depot {
         spaces[1] = new Semaphore(3, true);
         spaces[2] = new Semaphore(2, true);
         workers = new Worker[5];
+        toUnloading = new ConcurrentLinkedQueue<Car>();
         for(Worker w: workers)
         {
             w = new Worker((int)(Math.random()*2+1),toUnloading);
         }
-        toUnloading = new ConcurrentLinkedQueue<Car>();
         new CarGenerator(spaces, window,toUnloading);
 
         while(true){}

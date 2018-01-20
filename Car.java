@@ -8,6 +8,7 @@ public class Car extends Thread {
     private WindowGUI window;
     public int value, id;
     private Queue<Car> toUnloading;
+    public Semaphore stop = new Semaphore(1);
 
     public Car(int id, Semaphore[] spaces, WindowGUI window, Queue<Car> unloading) {
         this.spaces = spaces;
@@ -51,15 +52,11 @@ public class Car extends Thread {
             //zajmuje miejsce
             toUnloading.add(this);
             System.out.println("id: "+id+"||typ: "+type.name()+"||value: "+value+"|| Czekam na rozładunek na "+x);
-            while(value>0){
-                
-            }
-            //
+            stop.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }finally {
                 System.out.println("id: "+id+"||typ: "+type.name()+"||value: "+value+"|| Jestem pusty, odjeżdżam z "+x);
-            toUnloading.remove(this);
             spaces[x].release();
         }
     }

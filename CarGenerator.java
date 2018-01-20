@@ -18,7 +18,7 @@ public class CarGenerator extends Thread {
     public void run(){
         while(true){
             try {
-                Thread.sleep((int)(Math.random()*2500));
+                Thread.sleep((int)(Math.random()*5000));
                 new Car(id, spaces, window, toUnloading);
                 id++;
             }catch (Exception e){
