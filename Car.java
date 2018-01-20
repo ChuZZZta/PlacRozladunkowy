@@ -6,20 +6,20 @@ public class Car extends Thread {
     private Semaphore[] spaces;
     private CarType type;
     private WindowGUI window;
-    private int value;
+    public int value, id;
     private Queue<Car> toUnloading;
 
-    public Car(Semaphore[] spaces, WindowGUI window, Queue<Car> unloading) {
+    public Car(int id, Semaphore[] spaces, WindowGUI window, Queue<Car> unloading) {
         this.spaces = spaces;
         this.window = window;
         this.toUnloading = unloading;
         this.type = CarType.values()[(int)(Math.random()*3)];
         this.value = type.getNumVal()*20;
+        this.id = id;
         this.start();
     }
     public void run(){
-        //
-        System.out.println("nowy car "+type.name());
+        System.out.println("id: "+id+"||typ: "+type.name()+"||value: "+value+"|| Podjezdzam na plac");
         switch (type){
             case Truck:
                 unloadProcess(2);
@@ -46,16 +46,19 @@ public class Car extends Thread {
 
     private void unloadProcess(int x){
         try {
+            System.out.println("id: "+id+"||typ: "+type.name()+"||value: "+value+"|| Ustawiam się w kolejce na stanowisku "+x);
             spaces[x].acquire();
             //zajmuje miejsce
             toUnloading.add(this);
+            System.out.println("id: "+id+"||typ: "+type.name()+"||value: "+value+"|| Czekam na rozładunek na "+x);
             while(value>0){
-
+                
             }
             //
         } catch (InterruptedException e) {
             e.printStackTrace();
         }finally {
+                System.out.println("id: "+id+"||typ: "+type.name()+"||value: "+value+"|| Jestem pusty, odjeżdżam z "+x);
             toUnloading.remove(this);
             spaces[x].release();
         }
