@@ -19,20 +19,26 @@ public class Worker extends Thread
     {
         while(true)
         { 
-            if(!toUnloading.isEmpty())
+            if(!toUnloading.isEmpty()) //jesli jest cos w kolejce do rozladunku to worker zacznie pracowac
             {
-                if(toUnloading.peek().value<=0)
+                if(toUnloading.peek().value<=0)//jesli sie zdarzylo tak ze pierwszy samochod jest juz rozladowany to go puszcza
                 {
                     toUnloading.peek().stop.release();
                     toUnloading.poll();
                 }
-                else
+                else // jesli jednak cos dalej jest zaladowane
                 {
-                    toUnloading.peek().value -= capacity;
+                    if(toUnloading.peek().value<capacity) // jesli udalo sie zabrac wszytsko to go puszcza
+                    {
+                        toUnloading.peek().value=0;
+                        toUnloading.peek().stop.release();
+                        toUnloading.poll();
+                    }
+                    else toUnloading.peek().value -= capacity; // jesli dalej cos zostalo to wezmie co moze i samochod daej czeka
                     System.out.println("Rozładowuje "+toUnloading.peek().id+"||Zostało: "+toUnloading.peek().value);
                 }
             }
-            try {Thread.sleep((int)(Math.random()*1000));} catch (InterruptedException ex) {}
+            try {Thread.sleep((int)(Math.random()*1500));} catch (InterruptedException ex) {} //czeka losowy czas
         }
     }
 }

@@ -8,13 +8,13 @@ public class Car extends Thread {
     private WindowGUI window;
     public int value, id;
     private Queue<Car> toUnloading;
-    public Semaphore stop = new Semaphore(1);
+    public Semaphore stop = new Semaphore(0);
 
-    public Car(int id, Semaphore[] spaces, WindowGUI window, Queue<Car> unloading) {
+    public Car(int id, Semaphore[] spaces, WindowGUI window, Queue<Car> unloading, int t) {
         this.spaces = spaces;
         this.window = window;
         this.toUnloading = unloading;
-        this.type = CarType.values()[(int)(Math.random()*3)];
+        this.type = CarType.values()[t];
         this.value = type.getNumVal()*20;
         this.id = id;
         this.start();
@@ -49,7 +49,6 @@ public class Car extends Thread {
         try {
             System.out.println("id: "+id+"||typ: "+type.name()+"||value: "+value+"|| Ustawiam się w kolejce na stanowisku "+x);
             spaces[x].acquire();
-            //zajmuje miejsce
             toUnloading.add(this);
             System.out.println("id: "+id+"||typ: "+type.name()+"||value: "+value+"|| Czekam na rozładunek na "+x);
             stop.acquire();
