@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
@@ -8,6 +9,7 @@ public class Depot {
     private static Queue<Car> toUnloading;
 
     public static void main(String[] args){
+        /*
         spaces = new Semaphore[3];
         spaces[0] = new Semaphore(5, true);
         spaces[1] = new Semaphore(3, true);
@@ -16,6 +18,10 @@ public class Depot {
         new CarGenerator(spaces, window,toUnloading);
 
         while(true){}
+        */
+
+
+        window = new WindowGUI("Plac");
 
     }
 
