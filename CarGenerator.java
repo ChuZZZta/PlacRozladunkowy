@@ -24,6 +24,7 @@ public class CarGenerator extends Thread {
                 else if (random>80) {typ = 0;}
                 else typ = 1;
                 Thread.sleep((int)(Math.random()*1000));
+                window.setNewCarIco(CarType.values()[typ]);
                 new Car(id, spaces, window, toUnloading,typ);
                 id++;
             }catch (Exception e){

@@ -10,7 +10,9 @@ public class Depot {
     private static Worker[] workers;
 
     public static void main(String[] args){
-        /*
+
+
+
         spaces = new Semaphore[3];
         spaces[0] = new Semaphore(5,true);
         spaces[1] = new Semaphore(3,true);
@@ -19,15 +21,18 @@ public class Depot {
         toUnloading = new ConcurrentLinkedQueue<Car>();
         for(Worker w: workers)
         {
-            w = new Worker((int)(Math.random()*2+1),toUnloading);
-        }
-        new CarGenerator(spaces, window,toUnloading);
-        while(true)
-        {
-            System.out.println("-----------------\nAuta czekające na rozładunek: "+ toUnloading.size() +"\n Regular spaces:"+spaces[0].getQueueLength()+"\n Van spaces:"+spaces[1].getQueueLength()+"\n Truck spaces:"+spaces[2].getQueueLength()+" \n-----------------");
-            try {Thread.sleep(7000);} catch (InterruptedException ex) {}
+            w = new Worker(WorkerType.Human,toUnloading);
         }
         window = new WindowGUI("Plac");
+        new CarGenerator(spaces, window,toUnloading);
+
+        while(true)
+        {
+            window.placesList.peek().increaseVisitedWorker(WorkerType.Human);
+            System.out.println("-----------------\nAuta czekające na rozładunek: "+ toUnloading.size() +"\n Regular spaces:"+spaces[0].getQueueLength()+"\n Van spaces:"+spaces[1].getQueueLength()+"\n Truck spaces:"+spaces[2].getQueueLength()+" \n-----------------");
+            try {Thread.sleep(1000);} catch (InterruptedException ex) {}
+        }
+
     }
 
 }
