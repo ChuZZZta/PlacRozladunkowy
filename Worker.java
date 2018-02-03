@@ -6,39 +6,24 @@ import java.util.logging.Logger;
 public class Worker extends Thread
 {
     private WorkerType type;
-    private Queue<Car> toUnloading;
+    private WindowGUI window;
     
-    public Worker(WorkerType type, Queue<Car> tu)
+    public Worker(WorkerType type, WindowGUI window)
     {
         this.type = type;
-        toUnloading = tu;
+        this.window = window;
         this.start();
     }
     
     public void run()
     {
         while(true)
-        { 
-            if(!toUnloading.isEmpty()) //jesli jest cos w kolejce do rozladunku to worker zacznie pracowac
-            {
-                if(toUnloading.peek().value<=0)//jesli sie zdarzylo tak ze pierwszy samochod jest juz rozladowany to go puszcza
-                {
-                    //toUnloading.peek().stop.release();
-                    toUnloading.poll();
-                }
-                else // jesli jednak cos dalej jest zaladowane
-                {
-                    if(toUnloading.peek().value<type.getNumVal()*5) // jesli udalo sie zabrac wszytsko to go puszcza
-                    {
-                        toUnloading.peek().value=0;
-                        //toUnloading.peek().stop.release();
-                        toUnloading.poll();
-                    }
-                    else toUnloading.peek().value -= type.getNumVal()*5; // jesli dalej cos zostalo to wezmie co moze i samochod daej czeka
-                    System.out.println("Rozładowuje "+toUnloading.peek().id+"||Zostało: "+toUnloading.peek().value);
-                }
-            }
-            try {Thread.sleep((int)(Math.random()*1500));} catch (InterruptedException ex) {} //czeka losowy czas
+        {
+            try{
+                UnloadingPlace currentPlace = window.toUnloading.peek();
+                currentPlace.increaseVisitedWorker(type);
+            }catch (Exception e){}
+            try {Thread.sleep(((int)(Math.random()*3000+1000))*2);} catch (InterruptedException ex) {} //czeka losowy czas
         }
     }
 }

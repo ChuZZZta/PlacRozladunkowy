@@ -8,13 +8,13 @@ public class WindowGUI extends JFrame{
     public LinkedList<UnloadingPlace> placesList;
     private JLabel carIco;
     private JLabel normalCount, busCount, tirCount;
-    private Queue<Car> toUnloading;
+    public Queue<UnloadingPlace> toUnloading;
 
     public WindowGUI(String name){
         super(name);
         setSize(750, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        toUnloading = new ConcurrentLinkedQueue<Car>();
+        toUnloading = new ConcurrentLinkedQueue<UnloadingPlace>();
         setLayout(new BorderLayout());
 
         JPanel top = new JPanel();

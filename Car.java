@@ -1,20 +1,22 @@
 
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Car extends Thread {
     private Semaphore[] spaces;
     private CarType type;
     private WindowGUI window;
     private UnloadingPlace currentPlace = null;
-    public int value, id;
+    public int value;
+    private Semaphore canLeave = new Semaphore(0);
 
-    public Car(int id, Semaphore[] spaces, WindowGUI window, Queue<Car> unloading, int t) {
+    public Car(Semaphore[] spaces, WindowGUI window, int type) {
         this.spaces = spaces;
         this.window = window;
-        this.type = CarType.values()[t];
-        this.value = type.getNumVal()*20;
-        this.id = id;
+        this.type = CarType.values()[type];
+        this.value = this.type.getNumVal()*20;
         this.start();
     }
     public void run(){
@@ -48,7 +50,7 @@ public class Car extends Thread {
             window.increaseQueeCount(type);
             spaces[x].acquire();
             window.decreaseQueeCount(type);
-            //wybór odpowiedniego stanowiska
+            //wybór odpowiedniego stanowiska graficznego
             switch(x){
                 case 0:
                     this.currentPlace = window.placesList.get(0).initByNewCar(this);
@@ -65,8 +67,8 @@ public class Car extends Thread {
                     this.currentPlace = window.placesList.get(4).initByNewCar(this);
                     break;
             }
+            canLeave.acquire();
 
-            Thread.sleep(9000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }finally {
@@ -79,7 +81,15 @@ public class Car extends Thread {
         return this.type;
     }
 
-    public void setCurrentValue(int i){
-        this.value = i;
+    public synchronized void decreaseCurrentValueBy(int i){
+        this.value -= i;
+    }
+
+    public int getCurrentValue(){
+        return this.value;
+    }
+
+    public void allowLeave(){
+        canLeave.release();
     }
 }

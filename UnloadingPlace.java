@@ -11,10 +11,10 @@ public class UnloadingPlace extends JPanel {
         private JPanel workerPlace;
         private JPanel workerStats;
         private int carMaxCount;
-        private Queue<Car> toUnloading;
+        private Queue<UnloadingPlace> toUnloading;
         private JLabel normalWorkerCount, specialWorketCount;
 
-        public UnloadingPlace(Queue<Car> toUnloading){
+        public UnloadingPlace(Queue<UnloadingPlace> toUnloading){
             this.toUnloading = toUnloading;
             this.setSize(new Dimension(100, 200));
             super.setLayout(new BorderLayout());
@@ -49,7 +49,7 @@ public class UnloadingPlace extends JPanel {
         }
 
         public void clearCarIco(){
-            this.toUnloading.remove(currentCar);
+            this.toUnloading.remove(this);
             this.currentCar = null;
             this.setProgressBar(0);
             this.specialWorketCount.setText("0");
@@ -89,24 +89,29 @@ public class UnloadingPlace extends JPanel {
 
         public void increaseVisitedWorker(WorkerType type){
             if(type == WorkerType.Human){
+                currentCar.decreaseCurrentValueBy(1);
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         normalWorkerCount.setText(String.valueOf(Integer.parseInt(normalWorkerCount.getText())+1));
                     }
                 });
             }else{
+                currentCar.decreaseCurrentValueBy(3);
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         specialWorketCount.setText(String.valueOf(Integer.parseInt(specialWorketCount.getText())+1));
                     }
                 });
             }
-
+            setProgressBar((int)((currentCar.getCurrentValue()/(double)carMaxCount)*100));
+            if(currentCar.getCurrentValue()<1){
+                currentCar.allowLeave();
+            }
         }
 
     public UnloadingPlace initByNewCar(Car car) {
             currentCar = car;
-            toUnloading.add(currentCar);
+            toUnloading.add(this);
             setCarIco(car.getCarType());
             setProgressBar(100);
             carMaxCount = car.getCarType().getNumVal()*20;
