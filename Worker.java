@@ -23,7 +23,7 @@ public class Worker extends Thread
             {
                 if(toUnloading.peek().value<=0)//jesli sie zdarzylo tak ze pierwszy samochod jest juz rozladowany to go puszcza
                 {
-                    toUnloading.peek().stop.release();
+                    //toUnloading.peek().stop.release();
                     toUnloading.poll();
                 }
                 else // jesli jednak cos dalej jest zaladowane
@@ -31,7 +31,7 @@ public class Worker extends Thread
                     if(toUnloading.peek().value<type.getNumVal()*5) // jesli udalo sie zabrac wszytsko to go puszcza
                     {
                         toUnloading.peek().value=0;
-                        toUnloading.peek().stop.release();
+                        //toUnloading.peek().stop.release();
                         toUnloading.poll();
                     }
                     else toUnloading.peek().value -= type.getNumVal()*5; // jesli dalej cos zostalo to wezmie co moze i samochod daej czeka

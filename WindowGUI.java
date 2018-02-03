@@ -1,25 +1,28 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class WindowGUI extends JFrame{
-    public ConcurrentLinkedQueue<UnloadingPlace> placesList;
+    public LinkedList<UnloadingPlace> placesList;
     private JLabel carIco;
     private JLabel normalCount, busCount, tirCount;
+    private Queue<Car> toUnloading;
 
     public WindowGUI(String name){
         super(name);
         setSize(750, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        toUnloading = new ConcurrentLinkedQueue<Car>();
         setLayout(new BorderLayout());
 
         JPanel top = new JPanel();
         top.setLayout(new GridLayout(1,5));
         top.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
-        placesList = new ConcurrentLinkedQueue<UnloadingPlace>();
+        placesList = new LinkedList<UnloadingPlace>();
         for(int i=0; i<5;i++){
-            UnloadingPlace x = new UnloadingPlace();
+            UnloadingPlace x = new UnloadingPlace(toUnloading);
             x.setBorder(BorderFactory.createLineBorder(Color.GRAY));
             top.add(x);
             placesList.add(x);
@@ -109,6 +112,50 @@ public class WindowGUI extends JFrame{
                         default:{
                             carIco.setIcon(IconPlaceManager.empty);
                         }
+                }
+            }
+        });
+    }
+
+    public void increaseQueeCount(CarType type){
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                System.out.println(type);
+                switch (type){
+                    case Van:{
+                        busCount.setText(String.valueOf(Integer.parseInt(busCount.getText())+1));
+                        return;
+                    }
+                    case Truck:{
+                        tirCount.setText(String.valueOf(Integer.parseInt(tirCount.getText())+1));
+                        return;
+                    }
+                    case Regular:{
+                        normalCount.setText(String.valueOf(Integer.parseInt(normalCount.getText())+1));
+                        return;
+                    }
+                }
+            }
+        });
+    }
+
+    public void decreaseQueeCount(CarType type){
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                System.out.println(type);
+                switch (type){
+                    case Van:{
+                        busCount.setText(String.valueOf(Integer.parseInt(busCount.getText())-1));
+                        return;
+                    }
+                    case Truck:{
+                        tirCount.setText(String.valueOf(Integer.parseInt(tirCount.getText())-1));
+                        return;
+                    }
+                    case Regular:{
+                        normalCount.setText(String.valueOf(Integer.parseInt(normalCount.getText())-1));
+                        return;
+                    }
                 }
             }
         });
