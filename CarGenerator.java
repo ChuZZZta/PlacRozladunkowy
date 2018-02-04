@@ -1,4 +1,3 @@
-import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 public class CarGenerator extends Thread {
@@ -17,12 +16,12 @@ public class CarGenerator extends Thread {
         while(true){
             try {
                 random = (int)(Math.random()*101);
-                if (random<45) {typ = 2;}             //losowanie jaki pojazd 45% szans regular, 35% van, 20% truck
-                else if (random>80) {typ = 0;}
+                if (random<30) {typ = 2;}
+                else if (random>85) {typ = 0;}
                 else typ = 1;
                 window.setNewCarIco(CarType.values()[typ]);
                 new Car(spaces, window, typ);
-                Thread.sleep((int)(Math.random()*5000+1000));
+                Thread.sleep((int)(Math.random()*4500+1000));
             }catch (Exception e){
 
             }

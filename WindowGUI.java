@@ -8,13 +8,13 @@ public class WindowGUI extends JFrame{
     public LinkedList<UnloadingPlace> placesList;
     private JLabel carIco;
     private JLabel normalCount, busCount, tirCount;
-    public Queue<UnloadingPlace> toUnloading;
+    public LinkedList<UnloadingPlace> toUnloading;
 
     public WindowGUI(String name){
         super(name);
         setSize(750, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        toUnloading = new ConcurrentLinkedQueue<UnloadingPlace>();
+        toUnloading = new LinkedList<UnloadingPlace>();
         setLayout(new BorderLayout());
 
         JPanel top = new JPanel();
@@ -79,7 +79,7 @@ public class WindowGUI extends JFrame{
         JPanel newCarEntracePanel = new JPanel(new BorderLayout());
         JPanel newCarEntraceLabel = new JPanel();
         newCarEntraceLabel.setLayout(new BoxLayout(newCarEntraceLabel, BoxLayout.X_AXIS ));
-        JLabel label = new JLabel("Wjazd na plac");
+        JLabel label = new JLabel("Ostatnio wjechał");
         label.setFont(new Font("Serif", Font.BOLD, 25));
         newCarEntraceLabel.add(Box.createHorizontalGlue());
         newCarEntraceLabel.add(label);

@@ -1,8 +1,6 @@
-
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.Queue;
+import java.util.LinkedList;
 
 public class UnloadingPlace extends JPanel {
         private Car currentCar = null;
@@ -11,10 +9,10 @@ public class UnloadingPlace extends JPanel {
         private JPanel workerPlace;
         private JPanel workerStats;
         private int carMaxCount;
-        private Queue<UnloadingPlace> toUnloading;
+        private LinkedList<UnloadingPlace> toUnloading;
         private JLabel normalWorkerCount, specialWorketCount;
 
-        public UnloadingPlace(Queue<UnloadingPlace> toUnloading){
+        public UnloadingPlace(LinkedList<UnloadingPlace> toUnloading){
             this.toUnloading = toUnloading;
             this.setSize(new Dimension(100, 200));
             super.setLayout(new BorderLayout());
@@ -24,7 +22,7 @@ public class UnloadingPlace extends JPanel {
             workerTitle.setFont(new Font("Serif", Font.BOLD, 16));
             workerPlace.add(workerTitle, BorderLayout.NORTH);
             workerStats = new JPanel(new GridLayout(2,2));
-            workerStats.add(new JLabel("Normal"));
+            workerStats.add(new JLabel("Pracownik"));
             workerStats.add(new JLabel("Wózek"));
             normalWorkerCount = new JLabel("0");
             specialWorketCount = new JLabel("0");
@@ -49,13 +47,15 @@ public class UnloadingPlace extends JPanel {
         }
 
         public void clearCarIco(){
-            this.toUnloading.remove(this);
+            synchronized (toUnloading) {
+                this.toUnloading.remove(this);
+            }
             this.currentCar = null;
-            this.setProgressBar(0);
-            this.specialWorketCount.setText("0");
-            this.normalWorkerCount.setText("0");
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
+                    setProgressBar(0);
+                    specialWorketCount.setText("0");
+                    normalWorkerCount.setText("0");
                     carIco.setIcon(IconPlaceManager.empty);
                 }
             });
@@ -111,7 +111,9 @@ public class UnloadingPlace extends JPanel {
 
     public UnloadingPlace initByNewCar(Car car) {
             currentCar = car;
-            toUnloading.add(this);
+            synchronized (toUnloading){
+                toUnloading.add(this);
+            }
             setCarIco(car.getCarType());
             setProgressBar(100);
             carMaxCount = car.getCarType().getNumVal()*20;

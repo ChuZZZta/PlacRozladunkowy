@@ -20,8 +20,10 @@ public class Worker extends Thread
         while(true)
         {
             try{
-                UnloadingPlace currentPlace = window.toUnloading.peek();
-                currentPlace.increaseVisitedWorker(type);
+                synchronized (window.toUnloading){
+                    UnloadingPlace currentPlace = window.toUnloading.get((int)(Math.random()*window.toUnloading.size()));
+                    currentPlace.increaseVisitedWorker(type);
+                }
             }catch (Exception e){}
             try {Thread.sleep(((int)(Math.random()*3000+1000))*2);} catch (InterruptedException ex) {} //czeka losowy czas
         }

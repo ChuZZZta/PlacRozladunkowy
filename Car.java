@@ -1,8 +1,5 @@
 
-import java.util.Queue;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Car extends Thread {
     private Semaphore[] spaces;
@@ -19,8 +16,8 @@ public class Car extends Thread {
         this.value = this.type.getNumVal()*20;
         this.start();
     }
+
     public void run(){
-        //System.out.println("id: "+id+"||typ: "+type.name()+"||value: "+value+"|| Podjezdzam na plac");
         switch (type){
             case Truck:
                 unloadProcess(2);
@@ -33,7 +30,7 @@ public class Car extends Thread {
                 }
                 break;
             case Regular:
-                if(spaces[0].getQueueLength() <= spaces[1].getQueueLength() && spaces[0].getQueueLength() <= spaces[2].getQueueLength()){
+                if(spaces[0].getQueueLength()==0 || (spaces[0].getQueueLength()+2 <= spaces[1].getQueueLength() && spaces[0].getQueueLength() <= spaces[2].getQueueLength())){
                     unloadProcess(0);
                 } else if(spaces[1].getQueueLength() <= spaces[0].getQueueLength() && spaces[1].getQueueLength() <= spaces[2].getQueueLength()){
                     unloadProcess(1);
